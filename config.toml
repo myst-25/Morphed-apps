@@ -55,7 +55,7 @@ cli-source = "MorpheApp/morphe-cli"
 rv-brand = "Morphe"
 build-mode = "apk"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/amazon-mobile-llc/amazon-prime-video/"
-uptodown-dlurl = "https://amazon-prime-video.en.uptodown.com/android"
+uptodown-dlurl = "https://amazon-prime-video-fire.en.uptodown.com/android"
 
 [Duolingo-Morphe]
 app-name = "Duolingo"
@@ -73,7 +73,7 @@ cli-source = "MorpheApp/morphe-cli"
 rv-brand = "Morphe"
 build-mode = "apk"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/proton-technologies-ag/proton-vpn-fast-secure/"
-uptodown-dlurl = "https://protonvpn.en.uptodown.com/android"
+uptodown-dlurl = "https://proton-vpn.en.uptodown.com/android"
 
 [SoundCloud-Morphe]
 app-name = "SoundCloud"
@@ -118,7 +118,8 @@ cli-source = "MorpheApp/morphe-cli"
 rv-brand = "Morphe"
 build-mode = "apk"
 apkmirror-dlurl = "https://www.apkmirror.com/apk/adguard-software-limited/adguard-ad-blocker/"
-uptodown-dlurl = "https://adguard.en.uptodown.com/android"
+uptodown-dlurl = "https://adguard-content-blocker.en.uptodown.com/android"
+archive-dlurl = "https://archive.org/download/jhc-apks/apks/com.adguard.android"
 
 [SofaScore-Morphe]
 app-name = "SofaScore"
