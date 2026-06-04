@@ -1,0 +1,17 @@
+parallel-jobs = 1
+
+[Instagram]
+enabled = false
+patches-source = "crimera/piko"
+cli-source = "MorpheApp/morphe-cli"
+rv-brand = "Piko"
+build-mode = "apk"
+github-dlurl = "myst-25/ampy/com.instagram.android"
+
+[Twitter]
+patches-source = "crimera/piko"
+cli-source = "MorpheApp/morphe-cli"
+rv-brand = "Piko"
+build-mode = "apk"
+version = "11.81.0-release.0"
+github-dlurl = "myst-25/ampy/com.twitter.android"

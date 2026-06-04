@@ -1,0 +1,18 @@
+parallel-jobs = 1
+
+[YouTube-Morphe]
+app-name = "YouTube"
+patches-source = "MorpheApp/morphe-patches"
+cli-source = "MorpheApp/morphe-cli"
+rv-brand = "Morphe"
+build-mode = "apk"
+github-dlurl = "myst-25/ampy/com.google.android.youtube"
+
+[Music-Morphe]
+app-name = "Music"
+patches-source = "MorpheApp/morphe-patches"
+cli-source = "MorpheApp/morphe-cli"
+rv-brand = "Morphe"
+build-mode = "apk"
+arch = "both"
+github-dlurl = "myst-25/ampy/com.google.android.apps.youtube.music"
