@@ -546,14 +546,14 @@ dl_github() {
 	local url=$1 version=$2 output=$3 arch=$4
 	local repo="${url%/*}"
 	local asset_name="${__GITHUB_PKG_NAME__}-${version}-all.apk"
-	
-	# Fallback to the custom Myst25 filename format if standard format isn't used
-	if [ "$__GITHUB_CUSTOM_FILENAME__" = "true" ]; then
-		asset_name="${app_args[app_name]}_${version}_myst25.apk"
-	fi
-
 	local download_url="https://github.com/${repo}/releases/latest/download/${asset_name}"
-	req "$download_url" "$output" || return 1
+	
+	if ! req "$download_url" "$output"; then
+		# Fallback to custom Myst25 filename if the standard one fails
+		asset_name="${app_args[app_name]}_${version}_myst25.apk"
+		download_url="https://github.com/${repo}/releases/latest/download/${asset_name}"
+		req "$download_url" "$output" || return 1
+	fi
 }
 get_github_vers() { echo "$__GITHUB_RESP__"; }
 get_github_pkg_name() { echo "$__GITHUB_PKG_NAME__"; }
