@@ -545,15 +545,28 @@ get_archive_pkg_name() { echo "$__ARCHIVE_PKG_NAME__"; }
 dl_github() {
 	local url=$1 version=$2 output=$3 arch=$4
 	local repo="${url%/*}"
-	local asset_name="${__GITHUB_PKG_NAME__}-${version}-all.apk"
-	local download_url="https://github.com/${repo}/releases/latest/download/${asset_name}"
+	local asset_name=""
+	local download_url=""
 	
-	if ! req "$download_url" "$output"; then
-		# Fallback to custom Myst25 filename if the standard one fails
-		asset_name="${app_args[app_name]}_${version}_myst25.apk"
-		download_url="https://github.com/${repo}/releases/latest/download/${asset_name}"
-		req "$download_url" "$output" || return 1
+	if [ -n "${app_args[dl_keyword]}" ]; then
+		local r
+		r=$(gh_req "https://api.github.com/repos/${repo}/releases/latest" -)
+		if [ -n "$r" ]; then
+			local keyword="${app_args[dl_keyword]}"
+			# Match asset containing both keyword (case-insensitive) and version
+			asset_name=$(echo "$r" | jq -r '.assets[].name' | grep -i "$keyword" | grep "$version" | head -n 1)
+			if [ -n "$asset_name" ]; then
+				download_url="https://github.com/${repo}/releases/latest/download/${asset_name}"
+			fi
+		fi
 	fi
+	
+	if [ -z "$download_url" ]; then
+		asset_name="${__GITHUB_PKG_NAME__}-${version}-all.apk"
+		download_url="https://github.com/${repo}/releases/latest/download/${asset_name}"
+	fi
+	
+	req "$download_url" "$output" || return 1
 }
 get_github_vers() { echo "$__GITHUB_RESP__"; }
 get_github_pkg_name() { echo "$__GITHUB_PKG_NAME__"; }

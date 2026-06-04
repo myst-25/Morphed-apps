@@ -35,6 +35,8 @@ DEF_CLI_SRC=$(toml_get "$main_config_t" cli-source) || DEF_CLI_SRC="ReVanced/rev
 DEF_RV_BRAND=$(toml_get "$main_config_t" rv-brand) || DEF_RV_BRAND="ReVanced"
 mkdir -p "$TEMP_DIR" "$BUILD_DIR"
 
+APPS_JSON=$(curl -sL "https://raw.githubusercontent.com/myst-25/ampy/main/apps.json" || echo "{}")
+
 if [ "${2-}" = "--config-update" ]; then
 	config_update
 	exit 0
@@ -83,8 +85,17 @@ for table_name in $(toml_get_table_names); do
 	app_args[included_patches]=$(toml_get "$t" included-patches) || app_args[included_patches]=""
 	if [ -n "${app_args[included_patches]}" ] && [[ ${app_args[included_patches]} != *'"'* ]]; then abort "patch names inside included-patches must be quoted"; fi
 	app_args[exclusive_patches]=$(toml_get "$t" exclusive-patches) && vtf "${app_args[exclusive_patches]}" "exclusive-patches" || app_args[exclusive_patches]=false
-	app_args[version]=$(toml_get "$t" version) || app_args[version]="auto"
+	json_key=$(toml_get "$t" json-key) || json_key=""
+	if [ -n "$json_key" ]; then
+		app_args[version]=$(echo "$APPS_JSON" | jq -r --arg k "$json_key" '.[$k]')
+		if [ -z "${app_args[version]}" ] || [ "${app_args[version]}" = "null" ]; then
+			abort "ERROR: Could not find json-key '$json_key' in apps.json"
+		fi
+	else
+		app_args[version]=$(toml_get "$t" version) || app_args[version]="auto"
+	fi
 	app_args[app_name]=$(toml_get "$t" app-name) || app_args[app_name]=$table_name
+	app_args[dl_keyword]=$(toml_get "$t" dl-keyword) || app_args[dl_keyword]=""
 	app_args[patcher_args]=$(toml_get "$t" patcher-args) || app_args[patcher_args]=""
 	app_args[table]=$table_name
 	app_args[build_mode]=$(toml_get "$t" build-mode) && {
