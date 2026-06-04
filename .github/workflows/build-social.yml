@@ -60,8 +60,6 @@ jobs:
           TG_TOKEN: ${{ secrets.TG_TOKEN }}
         if: env.TG_TOKEN != null
         run: |
-        run: |
-        run: |
           cd build || { echo "build folder not found"; exit 1; }
 
           TG_CHAT="@morphedapps"
