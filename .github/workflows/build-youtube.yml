@@ -36,7 +36,6 @@ jobs:
 
       - name: Get output
         id: get_output
-        run: |
           DELIM="$(openssl rand -hex 8)"
           echo "BUILD_LOG<<${DELIM}" >> "$GITHUB_OUTPUT"
           cat build.md >> "$GITHUB_OUTPUT"
@@ -63,26 +62,32 @@ jobs:
           cd build || { echo "build folder not found"; exit 1; }
 
           TG_CHAT="@morphedapps"
-          NL=$'\n'
-          APKS=""
-          for OUTPUT in *; do
-            DL_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}/${OUTPUT}"
-            if [[ $OUTPUT = *.apk ]]; then
-              APKS+="${NL}📦[${OUTPUT}](${DL_URL})"
-            fi
-          done
-          APKS=${APKS#"$NL"}
+          
+          YT_VER=$(grep "YouTube-Morphe" ../build.md | head -n1 | awk '{print $NF}')
+          YTM_VER=$(grep "Music-Morphe" ../build.md | head -n1 | awk '{print $NF}')
+          
+          PATCH_TAG=$(curl -sL https://api.github.com/repos/MorpheApp/morphe-patches/releases/latest | jq -r .tag_name)
+          PATCH_VER=${PATCH_TAG#v}
+          
+          DL_BASE="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}"
 
-          BODY="$(sed 's/^\* \*\*/↪ \*\*/g; s/^\* `/↪ \*\*/g; s/`/\*/g; s/^\* /\↪/g; s/\*\*/\*/g; s/###//g; s/^- /↪ /g; /^==/d;' ../build.md)"
-          MSG="*New YouTube Build!*
+          MSG="> **Youtube and Yt Music**
 
-          ${BODY}
+\`youtube: ${YT_VER}\`
+\`yt music: ${YTM_VER}\`
 
-          *▼ Download Links:*
-          APKs:
-          ${APKS}
-          "
-          echo "'$MSG'"
-          MSG=${MSG:0:9450}
+Install Microg (https://github.com/MorpheApp/MicroG-RE/releases/tag/6.1.4) for non-root YouTube and YT Music APKs  
+Use zygisk-detach (https://github.com/j-hc/zygisk-detach) to detach YouTube and YT Music modules from Play Store  
+
+Morphe changelog (https://github.com/MorpheApp/morphe-patches/releases/tag/${PATCH_TAG})
+Morphe patched - ${PATCH_VER}
+
+apk link
+youtube - arm 64 V8a - [Download](${DL_BASE}/youtube-morphe-v${YT_VER}-arm64-v8a.apk)
+youtube - arm 7 - [Download](${DL_BASE}/youtube-morphe-v${YT_VER}-arm-v7a.apk)
+yt music - arm 64 V8a - [Download](${DL_BASE}/music-morphe-v${YTM_VER}-arm64-v8a.apk)
+yt music - arm 7 - [Download](${DL_BASE}/music-morphe-v${YTM_VER}-arm-v7a.apk)"
+
+          echo "$MSG"
           POST="https://api.telegram.org/bot${TG_TOKEN}/sendMessage"
           curl -X POST --data-urlencode "parse_mode=Markdown" --data-urlencode "disable_web_page_preview=true" --data-urlencode "text=${MSG}" --data-urlencode "chat_id=${TG_CHAT}" "$POST"
