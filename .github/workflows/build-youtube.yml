@@ -86,7 +86,9 @@ apk link
 youtube - arm 64 V8a - [Download](${DL_BASE}/youtube-morphe-v${YT_VER}-arm64-v8a.apk)
 youtube - arm 7 - [Download](${DL_BASE}/youtube-morphe-v${YT_VER}-arm-v7a.apk)
 yt music - arm 64 V8a - [Download](${DL_BASE}/music-morphe-v${YTM_VER}-arm64-v8a.apk)
-yt music - arm 7 - [Download](${DL_BASE}/music-morphe-v${YTM_VER}-arm-v7a.apk)"
+yt music - arm 7 - [Download](${DL_BASE}/music-morphe-v${YTM_VER}-arm-v7a.apk)
+
+[Myst25 chat for any discussion](https://t.me/+OQA0X-ECCHI4ZmU1)"
 
           echo "$MSG"
           POST="https://api.telegram.org/bot${TG_TOKEN}/sendMessage"

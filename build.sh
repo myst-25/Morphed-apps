@@ -148,7 +148,8 @@ rm -rf temp/tmp.*
 if [ -z "$(ls -A1 "${BUILD_DIR}")" ]; then abort "All builds failed."; fi
 
 log "\nInstall [Microg](https://github.com/MorpheApp/MicroG-RE/releases/tag/6.1.4) for non-root YouTube and YT Music APKs"
-log "\n[Morphed-apps](https://github.com/myst-25/Morphed-apps)\n"
+log "\n[Morphed-apps](https://github.com/myst-25/Morphed-apps)"
+log "[Myst25 chat for any discussion](https://t.me/+OQA0X-ECCHI4ZmU1)\n"
 log "$(cat "$TEMP_DIR"/*/changelog.md)"
 
 SKIPPED=$(cat "$TEMP_DIR"/skipped 2>/dev/null || :)
