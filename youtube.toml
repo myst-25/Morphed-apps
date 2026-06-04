@@ -7,6 +7,7 @@ cli-source = "MorpheApp/morphe-cli"
 rv-brand = "Morphe"
 build-mode = "apk"
 github-dlurl = "myst-25/ampy/com.google.android.youtube"
+version = "21.18.168"
 
 [Music-Morphe]
 app-name = "Music"
@@ -16,3 +17,4 @@ rv-brand = "Morphe"
 build-mode = "apk"
 arch = "both"
 github-dlurl = "myst-25/ampy/com.google.android.apps.youtube.music"
+version = "9.21.51"
