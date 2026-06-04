@@ -147,7 +147,7 @@ wait
 rm -rf temp/tmp.*
 if [ -z "$(ls -A1 "${BUILD_DIR}")" ]; then abort "All builds failed."; fi
 
-log "\nInstall [Microg](https://github.com/ReVanced/GmsCore/releases) for non-root YouTube and YT Music APKs"
+log "\nInstall [Microg](https://github.com/MorpheApp/MicroG-RE/releases/tag/6.1.4) for non-root YouTube and YT Music APKs"
 log "\n[Morphed-apps](https://github.com/myst-25/Morphed-apps)\n"
 log "$(cat "$TEMP_DIR"/*/changelog.md)"
 
