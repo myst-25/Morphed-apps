@@ -772,28 +772,26 @@ build_rv() {
 			fi
 		fi
 
-		local stock_apk_to_patch="${stock_apk}.stripped.apk"
-		cp -f "$stock_apk" "$stock_apk_to_patch"
-		if [ "$arch" = "arm64-v8a" ]; then
-			zip -d "$stock_apk_to_patch" "lib/armeabi-v7a/*" "lib/x86_64/*" "lib/x86/*" >/dev/null 2>&1 || :
-		elif [ "$arch" = "arm-v7a" ]; then
-			zip -d "$stock_apk_to_patch" "lib/arm64-v8a/*" "lib/x86_64/*" "lib/x86/*" >/dev/null 2>&1 || :
-		elif [ "$arch" = "x86" ]; then
-			zip -d "$stock_apk_to_patch" "lib/arm64-v8a/*" "lib/x86_64/*" "lib/armeabi-v7a/*" >/dev/null 2>&1 || :
-		elif [ "$arch" = "x86_64" ]; then
-			zip -d "$stock_apk_to_patch" "lib/arm64-v8a/*" "lib/armeabi-v7a/*" "lib/x86/*" >/dev/null 2>&1 || :
-		else
-			zip -d "$stock_apk_to_patch" "lib/x86_64/*" "lib/x86/*" >/dev/null 2>&1 || :
-		fi
-
 		local apk_output="${BUILD_DIR}/${app_name_l}-${rv_brand_f}-v${version_f}-${arch_f}.apk"
 		if [ "${NORB:-}" != true ] || { [ ! -f "$patched_apk" ] && [ ! -f "$apk_output" ]; }; then
-			if ! patch_apk "$stock_apk_to_patch" "$patched_apk" "${patcher_args[*]}" "${args[cli]}" "${args[ptjar]}"; then
+			if ! patch_apk "$stock_apk" "$patched_apk" "${patcher_args[*]}" "${args[cli]}" "${args[ptjar]}"; then
 				epr "Building '${table}' failed!"
 				return 0
 			fi
 		fi
-		rm "$stock_apk_to_patch"
+
+                if [ "$arch" = "arm64-v8a" ]; then
+                        zip -d "$patched_apk" "lib/armeabi-v7a/*" "lib/x86_64/*" "lib/x86/*" >/dev/null 2>&1 || :
+                elif [ "$arch" = "arm-v7a" ]; then
+                        zip -d "$patched_apk" "lib/arm64-v8a/*" "lib/x86_64/*" "lib/x86/*" >/dev/null 2>&1 || :
+                elif [ "$arch" = "x86" ]; then
+                        zip -d "$patched_apk" "lib/arm64-v8a/*" "lib/x86_64/*" "lib/armeabi-v7a/*" >/dev/null 2>&1 || :
+                elif [ "$arch" = "x86_64" ]; then
+                        zip -d "$patched_apk" "lib/arm64-v8a/*" "lib/armeabi-v7a/*" "lib/x86/*" >/dev/null 2>&1 || :
+                else
+                        zip -d "$patched_apk" "lib/x86_64/*" "lib/x86/*" >/dev/null 2>&1 || :
+                fi
+                java -jar "$APKSIGNER" sign --ks ks.keystore --ks-pass pass:123456789 --ks-key-alias jhc --key-pass pass:123456789 "$patched_apk" >/dev/null 2>&1 || :
 		if [ "$build_mode" = apk ]; then
 			if [ "${NORB:-}" != true ] || { [ ! -f "$patched_apk" ] && [ ! -f "$apk_output" ]; }; then
 				mv -f "$patched_apk" "$apk_output"
