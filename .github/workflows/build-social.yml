@@ -60,29 +60,51 @@ jobs:
           TG_TOKEN: ${{ secrets.TG_TOKEN }}
         if: env.TG_TOKEN != null
         run: |
+        run: |
+        run: |
           cd build || { echo "build folder not found"; exit 1; }
 
           TG_CHAT="@morphedapps"
-          NL=$'\n'
-          APKS=""
-          for OUTPUT in *; do
-            DL_URL="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}/${OUTPUT}"
-            if [[ $OUTPUT = *.apk ]]; then
-              APKS+="${NL}📦[${OUTPUT}](${DL_URL})"
-            fi
-          done
-          APKS=${APKS#"$NL"}
+          
+          X_VER=$(grep "Twitter" ../build.md | head -n1 | awk '{print $NF}')
+          IG_VER=$(grep "Instagram" ../build.md | head -n1 | awk '{print $NF}')
+          
+          PATCH_TAG=$(curl -sL https://api.github.com/repos/crimera/piko/releases/latest | jq -r .tag_name)
+          PATCH_VER=${PATCH_TAG#v}
+          
+          DL_BASE="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/releases/download/${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}"
 
-          BODY="$(sed 's/^\* \*\*/↪ \*\*/g; s/^\* `/↪ \*\*/g; s/`/\*/g; s/^\* /\↪/g; s/\*\*/\*/g; s/###//g; s/^- /↪ /g; /^==/d;' ../build.md)"
-          MSG="*New Social Build (X & Insta)!*
+          MSG="> **X and Instagram**
 
-          ${BODY}
+          \`x: ${X_VER:-N/A}\`
+          \`instagram: ${IG_VER:-N/A}\`
 
-          *▼ Download Links:*
-          APKs:
-          ${APKS}
-          "
-          echo "'$MSG'"
-          MSG=${MSG:0:9450}
+          Install [Microg](https://github.com/MorpheApp/MicroG-RE/releases/tag/6.1.4) for non-root X and Instagram APKs
+          Use [zygisk-detach](https://github.com/j-hc/zygisk-detach) to detach X and Instagram modules from Play Store
+
+          [Piko changelog](https://github.com/crimera/piko/releases/tag/${PATCH_TAG})
+          Piko patched - ${PATCH_VER}
+
+          apk link"
+
+          if [ -n "$X_VER" ] && [ "$X_VER" != "N/A" ]; then
+            MSG="$MSG
+          x - arm 64 V8a - [Download](${DL_BASE}/twitter-piko-v${X_VER}-arm64-v8a.apk)
+          x - arm 7 - [Download](${DL_BASE}/twitter-piko-v${X_VER}-arm-v7a.apk)"
+          fi
+
+          if [ -n "$IG_VER" ] && [ "$IG_VER" != "N/A" ]; then
+            MSG="$MSG
+          instagram - arm 64 V8a - [Download](${DL_BASE}/instagram-piko-v${IG_VER}-arm64-v8a.apk)
+          instagram - arm 7 - [Download](${DL_BASE}/instagram-piko-v${IG_VER}-arm-v7a.apk)"
+          fi
+
+          MSG="$MSG
+
+          [Myst25 chat for any discussion](https://t.me/+OQA0X-ECCHI4ZmU1)"
+
+          MSG="$(echo "$MSG" | sed 's/^ \{10\}//')"
+          
+          echo "$MSG"
           POST="https://api.telegram.org/bot${TG_TOKEN}/sendMessage"
           curl -X POST --data-urlencode "parse_mode=Markdown" --data-urlencode "disable_web_page_preview=true" --data-urlencode "text=${MSG}" --data-urlencode "chat_id=${TG_CHAT}" "$POST"
