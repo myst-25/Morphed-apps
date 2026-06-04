@@ -566,7 +566,15 @@ dl_github() {
 		download_url="https://github.com/${repo}/releases/latest/download/${asset_name}"
 	fi
 	
-	req "$download_url" "$output" || return 1
+        if req "$download_url" "$output"; then
+                if unzip -l "$output" 2>/dev/null | grep -q "base.apk"; then
+                        mv "$output" "${output}.apkm"
+                        merge_splits "${output}.apkm" "$output"
+                fi
+                return 0
+        else
+                return 1
+        fi
 }
 get_github_vers() { echo "$__GITHUB_RESP__"; }
 get_github_pkg_name() { echo "$__GITHUB_PKG_NAME__"; }
