@@ -8,6 +8,7 @@ rv-brand = "Morphe"
 build-mode = "apk"
 github-dlurl = "myst-25/ampy/com.google.android.youtube"
 version = "21.21.80"
+arch = "both"
 
 [Music-Morphe]
 app-name = "Music"
