@@ -87,7 +87,7 @@ jobs:
 
           if [ -n "$X_VER" ] && [ "$X_VER" != "N/A" ]; then
             MSG="$MSG
-          x - universal - [Download](${DL_BASE}/twitter-piko-v${X_VER}-universal.apk)"
+          x - universal - [Download](${DL_BASE}/twitter-piko-v${X_VER}-all.apk)"
           fi
 
           if [ -n "$IG_VER" ] && [ "$IG_VER" != "N/A" ]; then
