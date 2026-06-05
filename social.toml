@@ -6,6 +6,7 @@ cli-source = "MorpheApp/morphe-cli"
 rv-brand = "Piko"
 build-mode = "apk"
 github-dlurl = "myst-25/ampy/com.instagram.android"
+version = "433.0.0.4.68"
 patcher-args = "--continue-on-error"
 arch = "all"
 

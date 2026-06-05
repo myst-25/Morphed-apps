@@ -624,7 +624,10 @@ patch_apk() {
 
 	if [ "$OS" = Android ]; then cmd+=" --custom-aapt2-binary='${AAPT2}'"; fi
 	pr "$cmd"
-	if eval "$cmd"; then [ -f "$patched_apk" ]; else
+	eval "$cmd" || true
+	if [ -f "$patched_apk" ]; then
+		return 0
+	else
 		rm "$patched_apk" 2>/dev/null || :
 		return 1
 	fi
