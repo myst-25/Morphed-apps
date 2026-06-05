@@ -1,13 +1,13 @@
 parallel-jobs = 1
 
 [Instagram]
-enabled = false
 patches-source = "crimera/piko"
 cli-source = "MorpheApp/morphe-cli"
 rv-brand = "Piko"
 build-mode = "apk"
 github-dlurl = "myst-25/ampy/com.instagram.android"
 patcher-args = "--continue-on-error"
+arch = "all"
 
 [Twitter]
 patches-source = "crimera/piko"

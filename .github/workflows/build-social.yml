@@ -92,8 +92,7 @@ jobs:
 
           if [ -n "$IG_VER" ] && [ "$IG_VER" != "N/A" ]; then
             MSG="$MSG
-          instagram - arm 64 V8a - [Download](${DL_BASE}/instagram-piko-v${IG_VER}-arm64-v8a.apk)
-          instagram - arm 7 - [Download](${DL_BASE}/instagram-piko-v${IG_VER}-arm-v7a.apk)"
+          instagram - universal - [Download](${DL_BASE}/instagram-piko-v${IG_VER}-all.apk)"
           fi
 
           MSG="$MSG
