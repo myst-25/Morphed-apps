@@ -344,6 +344,17 @@ merge_splits() {
 		return 1
 	fi
 	# sign the merged stock apk
+                local zipalign_cmd="zipalign"
+                if ! command -v zipalign >/dev/null 2>&1; then
+                        if [ -n "${ANDROID_HOME:-}" ]; then
+                                zipalign_cmd=$(find "$ANDROID_HOME/build-tools" -name "zipalign" 2>/dev/null | sort -V | tail -n1)
+                        elif [ -n "${ANDROID_SDK_ROOT:-}" ]; then
+                                zipalign_cmd=$(find "$ANDROID_SDK_ROOT/build-tools" -name "zipalign" 2>/dev/null | sort -V | tail -n1)
+                        fi
+                fi
+                if [ -n "$zipalign_cmd" ] && [ -x "$zipalign_cmd" ]; then
+                        "$zipalign_cmd" -f -p 4 "$patched_apk" "${patched_apk}.aligned" && mv -f "${patched_apk}.aligned" "$patched_apk"
+                fi
 	if ! OP=$(java -jar "$APKSIGNER" sign --ks ks-p12.keystore --ks-pass pass:123456789 --key-pass pass:123456789 --ks-key-alias jhc \
 		--out "${output}" "${output}-unsigned"); then
 		epr "apksigner error: $OP"
@@ -801,6 +812,17 @@ build_rv() {
                         zip -d "$patched_apk" "lib/arm64-v8a/*" "lib/armeabi-v7a/*" "lib/x86/*" >/dev/null 2>&1 || :
                 else
                         zip -d "$patched_apk" "lib/x86_64/*" "lib/x86/*" >/dev/null 2>&1 || :
+                fi
+                local zipalign_cmd="zipalign"
+                if ! command -v zipalign >/dev/null 2>&1; then
+                        if [ -n "${ANDROID_HOME:-}" ]; then
+                                zipalign_cmd=$(find "$ANDROID_HOME/build-tools" -name "zipalign" 2>/dev/null | sort -V | tail -n1)
+                        elif [ -n "${ANDROID_SDK_ROOT:-}" ]; then
+                                zipalign_cmd=$(find "$ANDROID_SDK_ROOT/build-tools" -name "zipalign" 2>/dev/null | sort -V | tail -n1)
+                        fi
+                fi
+                if [ -n "$zipalign_cmd" ] && [ -x "$zipalign_cmd" ]; then
+                        "$zipalign_cmd" -f -p 4 "$patched_apk" "${patched_apk}.aligned" && mv -f "${patched_apk}.aligned" "$patched_apk"
                 fi
                 java -jar "$APKSIGNER" sign --ks ks.keystore --ks-pass pass:123456789 --ks-key-alias jhc --key-pass pass:123456789 "$patched_apk" >/dev/null 2>&1 || :
 		if [ "$build_mode" = apk ]; then
