@@ -802,6 +802,7 @@ build_rv() {
 			fi
 		fi
 
+                if [ "$build_mode" != "apk" ]; then
                 if [ "$arch" = "arm64-v8a" ]; then
                         zip -d "$patched_apk" "lib/armeabi-v7a/*" "lib/x86_64/*" "lib/x86/*" >/dev/null 2>&1 || :
                 elif [ "$arch" = "arm-v7a" ]; then
@@ -825,6 +826,7 @@ build_rv() {
                         "$zipalign_cmd" -f -p 4 "$patched_apk" "${patched_apk}.aligned" && mv -f "${patched_apk}.aligned" "$patched_apk"
                 fi
                 java -jar "$APKSIGNER" sign --ks ks.keystore --ks-pass pass:123456789 --ks-key-alias jhc --key-pass pass:123456789 "$patched_apk" >/dev/null 2>&1 || :
+                fi
 		if [ "$build_mode" = apk ]; then
 			if [ "${NORB:-}" != true ] || { [ ! -f "$patched_apk" ] && [ ! -f "$apk_output" ]; }; then
 				mv -f "$patched_apk" "$apk_output"
